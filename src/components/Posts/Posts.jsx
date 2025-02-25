@@ -1,6 +1,6 @@
 import api from "../../../baseAPI";
 import "./Posts.css";
-import useFetch from "../../functions/getAll";
+import useFetch from "../Controllers/GetAll";
 
 function Posts() {
     const { data: posts, loading, error } = useFetch(`${api}/posts?limit=10`);
