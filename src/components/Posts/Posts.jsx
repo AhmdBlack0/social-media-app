@@ -8,17 +8,12 @@ import Post from "../Post/Post";
 function Posts() {
     const [posts, setPosts] = useState([]);
     const [page, setPage] = useState(1);
-    const [loading, setLoading] = useState(false);
-    const [error, setError] = useState(null);
+    const [loading, setLoading] = useState(true);
     const [hasMore, setHasMore] = useState(true);
 
     useEffect(() => {
         const fetchPosts = async () => {
-            if (!hasMore || loading) return; // Avoid extra API calls
-
-            setLoading(true);
-            setError(null);
-
+            if (!hasMore) return;
             try {
                 const response = await axios.get(`${api}/posts?limit=10&page=${page}`);
                 const newPosts = response.data.data;
@@ -30,7 +25,6 @@ function Posts() {
                 }
             } catch (err) {
                 console.error("Error fetching posts:", err);
-                setError("Failed to load posts.");
             } finally {
                 setLoading(false);
             }
@@ -55,8 +49,6 @@ function Posts() {
 
     return (
         <div className="posts">
-            {error && <p className="error">{error}</p>}
-
             {posts.length > 0 && (
                 posts.map((post) => (
                     <Link to={`/post/${post.id}`} key={`${post.id}-${Math.random()}`}>
@@ -64,7 +56,6 @@ function Posts() {
                     </Link>
                 ))
             ) }
-
         </div>
     );
 }
