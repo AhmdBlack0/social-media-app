@@ -62,6 +62,6 @@ a {
 @media (max-width: 576px) {
   .right-sec {
     max-width: 300px;
-    margin-left: 70px;
+    margin-left: 40px;
   }
 }
