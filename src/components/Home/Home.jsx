@@ -1,14 +1,15 @@
 import './Home.css'
-import NavBar from '../NavBar/NavBar'
+import AddPostBtn from '../AddPostBtn/AddPostBtn'
 import Posts from '../Posts/Posts'
 
 
 function Home() {
+    const token = localStorage.getItem("token")
     return (
-    <div className="home">
-        <NavBar />
-        <Posts />
-    </div>
+        <div className="home">
+            {token ? <AddPostBtn /> : null}
+            <Posts />
+        </div>
     )
 }
 
