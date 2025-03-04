@@ -6,7 +6,7 @@ import { useNavigate } from "react-router-dom";
 
 function AddPost() {
     const [postTitle, setPostTitle] = useState("");
-    const [postImage, setPostImage] = useState(null);
+    const [postImage, setPostImage] = useState({});
     const [postDescription, setPostDescription] = useState("");
     const navigate = useNavigate()
 
@@ -15,7 +15,9 @@ function AddPost() {
 
         const formData = new FormData();
         formData.append("title", postTitle);
-        formData.append("image", postImage);
+            if (postImage && postImage.name) {
+            formData.append("image", postImage);
+        }
         formData.append("body", postDescription);
 
         try {
@@ -59,7 +61,7 @@ function AddPost() {
                     onChange={(e) => setPostDescription(e.target.value)}
                 />
 
-                <button type="submit">Submit</button>
+                <button type="submit">Add Post</button>
             </form>
         </div>
     );

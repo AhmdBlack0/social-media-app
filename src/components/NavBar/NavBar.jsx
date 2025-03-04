@@ -10,7 +10,7 @@ function NavBar() {
             {/* <input type="search" /> */}
             {
                 token &&
-                <Link className="add-post-btn" to='/add-post'><FiPlus />Add Post</Link>
+                <Link title="Add Post" className="add-post-btn" to='/add-post'><FiPlus /></Link>
             }
         </div>
     )

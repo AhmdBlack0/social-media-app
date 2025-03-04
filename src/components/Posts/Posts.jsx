@@ -1,38 +1,70 @@
 import api from "../../../baseAPI";
 import "./Posts.css";
-import useFetch from "../Controllers/GetAll";
+import { useEffect, useState } from "react";
+import axios from "axios";
+import { Link } from "react-router-dom";
+import Post from "../Post/Post";
 
 function Posts() {
-    const { data: posts, loading, error } = useFetch(`${api}/posts?limit=10`);
+    const [posts, setPosts] = useState([]);
+    const [page, setPage] = useState(1);
+    const [loading, setLoading] = useState(false);
+    const [error, setError] = useState(null);
+    const [hasMore, setHasMore] = useState(true);
+
+    useEffect(() => {
+        const fetchPosts = async () => {
+            if (!hasMore || loading) return; // Avoid extra API calls
+
+            setLoading(true);
+            setError(null);
+
+            try {
+                const response = await axios.get(`${api}/posts?limit=10&page=${page}`);
+                const newPosts = response.data.data;
+
+                if (newPosts.length === 0) {
+                    setHasMore(false);
+                } else {
+                    setPosts((prevPosts) => [...prevPosts, ...newPosts]);
+                }
+            } catch (err) {
+                console.error("Error fetching posts:", err);
+                setError("Failed to load posts.");
+            } finally {
+                setLoading(false);
+            }
+        };
+
+        fetchPosts();
+    }, [page]);
+
+    useEffect(() => {
+        const handleScroll = () => {
+            const nearBottom = window.innerHeight + window.scrollY >= document.body.offsetHeight - 100;
+            if (nearBottom && !loading && hasMore) {
+                setPage((prevPage) => prevPage + 1);
+            }
+        };
+
+        window.addEventListener("scroll", handleScroll);
+        return () => window.removeEventListener("scroll", handleScroll);
+    }, [loading, hasMore]);
 
     if (loading) return <div className="loader-container"><p className="loader"></p></div>;
-    if (error) return <p className="error">Failed to load posts.</p>;
 
     return (
         <div className="posts">
-            {posts.length > 0 ? (
-                posts.map((post) => {
-                    return (
-                        <div className="post" key={post.id}>
-                            <div className="post-header">
-                                <img className="post-profile-image" src={post.author.profile_image} alt="" />
-                                <h4 className="post-username">{post.author.username}</h4>
-                            </div>
-                            <div className="post-body">
-                                {post.image && <img className="post-image" src={post.image} alt="" />}
-                                <p className="post-time">{post.created_at}</p>
-                                <h2 className="post-title">{post.title}</h2>
-                                <p className="post-description">{post.body}</p>
-                            </div>
-                            <div className="post-comments">
-                                <p>({post.comments_count}) comments</p>
-                            </div>
-                        </div>
-                    );
-                })
-            ) : (
-                <p className="no-posts">No posts available</p>
-            )}
+            {error && <p className="error">{error}</p>}
+
+            {posts.length > 0 && (
+                posts.map((post) => (
+                    <Link to={`/post/${post.id}`} key={`${post.id}-${Math.random()}`}>
+                        <Post post={post} />
+                    </Link>
+                ))
+            ) }
+
         </div>
     );
 }

@@ -56,7 +56,7 @@ function SideBar() {
                     </Link>
                 </>
             ) : (
-                <Link to="/login" className="sidebar-link">
+                <Link to="/login" className="sidebar-link" onClick={() => setShowSidebar(false)}>
                     <CiLogin />
                     {showSidebar && "Login"}
                 </Link>

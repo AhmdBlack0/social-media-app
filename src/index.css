@@ -50,3 +50,18 @@ a {
 @keyframes l15{ 
   100%{transform: rotate(1turn)}
 }
+
+
+.right-sec {
+  max-width: 400px;
+  margin: 0 auto;
+  padding: 20px;
+  border-radius: 8px;
+}
+
+@media (max-width: 576px) {
+  .right-sec {
+    max-width: 300px;
+    margin-left: 70px;
+  }
+}
