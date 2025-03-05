@@ -6,16 +6,16 @@ import { useNavigate } from "react-router-dom";
 
 function AddPost() {
     const [postTitle, setPostTitle] = useState("");
-    const [postImage, setPostImage] = useState({});
+    const [postImage, setPostImage] = useState(null);
     const [postDescription, setPostDescription] = useState("");
-    const navigate = useNavigate()
+    const navigate = useNavigate();
 
     const handleSubmit = async (e) => {
         e.preventDefault();
 
         const formData = new FormData();
         formData.append("title", postTitle);
-            if (postImage && postImage.name) {
+        if (postImage) {
             formData.append("image", postImage);
         }
         formData.append("body", postDescription);
@@ -24,12 +24,12 @@ function AddPost() {
             await axios.post(`${baseAPI}/posts`, formData, {
                 headers: {
                     Authorization: `Bearer ${localStorage.getItem("token")}`,
-                    "Content-Type": "multipart/form-data",
                 },
             });
+
             navigate("/");
         } catch (error) {
-            console.error("Error uploading post:", error);
+            console.error(error);
         } 
     };
 
@@ -41,7 +41,9 @@ function AddPost() {
                     type="file"
                     id="postImage"
                     accept="image/*"
-                    onChange={(e) => setPostImage(e.target.files[0])}
+                    onChange={(e) => {
+                        setPostImage(e.target.files[0]);
+                    }}
                 />
 
                 <label htmlFor="postTitle">Title</label>

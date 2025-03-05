@@ -4,12 +4,14 @@ import { useParams } from "react-router-dom";
 import baseAPI from "../../../baseAPI";
 import "./PostDetails.css";
 import Post from "../Post/Post";
+import AddComment from "../AddComment/AddComment";
 
 function PostDetails() {
     const { postId } = useParams();
     const [post, setPost] = useState(null);
     const [error, setError] = useState(null);
     const [loading, setLoading] = useState(true);
+    const token = localStorage.getItem("token");
 
     useEffect(() => {
         setLoading(true);
@@ -59,6 +61,9 @@ function PostDetails() {
                     <p className="no-comments">No comments yet. Be the first to comment!</p>
                 )}
             </div>
+            {
+                token && <AddComment />
+            }
         </div>
     );
 }
