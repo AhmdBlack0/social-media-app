@@ -57,6 +57,7 @@
 
 .post-description, .post-title {
     margin-top: 10px;
+    overflow-wrap: break-word;
 }
 
 .post-comments {

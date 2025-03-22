@@ -5,6 +5,7 @@ import baseAPI from "../../../baseAPI";
 import "./PostDetails.css";
 import Post from "../Post/Post";
 import AddComment from "../AddComment/AddComment";
+import Comments from "../Comments/Comments";
 
 function PostDetails() {
     const { postId } = useParams();
@@ -37,30 +38,8 @@ function PostDetails() {
     return (
         <div className="post-details">
             <Post post={post} />
-
-            <div className="comments">
-                <h3>Comments ({post.comments?.length || 0})</h3>
-
-                {post.comments?.length > 0 ? (
-                    post.comments.map((comment) => (
-                        <div className="comment" key={comment.id}>
-                            <div className="comment-header">
-                                <img
-                                    src={comment.author.profile_image}
-                                    alt=""
-                                    className="comment-avatar"
-                                />
-                                <div className="comment-user">
-                                    <h4>{comment.author.username}</h4>
-                                </div>
-                            </div>
-                            <p className="comment-body">{comment.body}</p>
-                        </div>
-                    ))
-                ) : (
-                    <p className="no-comments">No comments yet. Be the first to comment!</p>
-                )}
-            </div>
+            <Comments postId={postId} />    
+            
             {
                 token && <AddComment />
             }
