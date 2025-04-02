@@ -1,17 +1,13 @@
 import { useEffect, useState } from 'react';
 import axios from 'axios';
 import baseAPI from '../../../baseAPI';
+import { useParams } from 'react-router-dom';
 
-function Comments({ postId }) {
+function Comments() {
     const [comments, setComments] = useState([]);
-    const [loading, setLoading] = useState(true);
-    const [error, setError] = useState(null);
-    const [newComment, setNewComment] = useState('');
-    const [refresh, setRefresh] = useState(false); // State to trigger re-fetch
+    const postId = useParams().postId;
 
     useEffect(() => {
-        setLoading(true);
-        setError(null);
 
         axios.get(`${baseAPI}/posts/${postId}`)
             .then((response) => {
@@ -19,46 +15,15 @@ function Comments({ postId }) {
             })
             .catch((error) => {
                 console.error("Error fetching comments:", error);
-                setError("Failed to load comments.");
             })
-            .finally(() => {
-                setLoading(false);
-            });
-    }, [postId, refresh]); // Now updates when a new comment is added
+    }, [postId]); // Now updates when a new comment is added
 
-    const addComment = () => {
-        if (!newComment.trim()) return; // Prevent empty comments
-
-        axios.post(`${baseAPI}/posts/${postId}/comments`, { body: newComment })
-            .then(() => {
-                setNewComment('');
-                setRefresh((prev) => !prev); // Toggle refresh to trigger useEffect
-            })
-            .catch((error) => {
-                console.error("Error adding comment:", error);
-                setError("Failed to add comment.");
-            });
-    };
 
     return (
         <div className="comments">
             <h3>Comments ({comments.length})</h3>
 
-            <div className="comment-form">
-                <input
-                    type="text"
-                    value={newComment}
-                    onChange={(e) => setNewComment(e.target.value)}
-                    placeholder="Write a comment..."
-                />
-                <button onClick={addComment}>Add Comment</button>
-            </div>
-
-            {loading ? (
-                <p>Loading comments...</p>
-            ) : error ? (
-                <p className="error-message">{error}</p>
-            ) : comments.length > 0 ? (
+            {
                 comments.map((comment) => (
                     <div className="comment" key={comment.id}>
                         <div className="comment-header">
@@ -73,10 +38,7 @@ function Comments({ postId }) {
                         </div>
                         <p className="comment-body">{comment.body}</p>
                     </div>
-                ))
-            ) : (
-                <p className="no-comments">No comments yet. Be the first to comment!</p>
-            )}
+                ))}
         </div>
     );
 }

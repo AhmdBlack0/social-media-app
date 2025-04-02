@@ -7,7 +7,7 @@ function Post({ post }) {
                 <h4 className="post-username">{post.author.username}</h4>
             </div>
             <div className="post-body">
-                {post.image == {} && <img className="post-image" src={post.image} alt="" />}
+                <img className="post-image" src={post.image} alt="" />
                 <p className="post-time">{post.created_at}</p>
                 <h2 className="post-title">{post.title}</h2>
                 <p className="post-description">{post.body}</p>
